@@ -88,7 +88,7 @@
 //------- Start Bread Crumb --------//
 
 .organic-breadcrumb {
-	background: url(../img/banner/common-banner.jpg) center no-repeat;
+	// background: url(../img/banner/common-banner.jpg) center no-repeat;
 	background-size: cover;
 	padding-top: 130px;
 	@media (max-width: 991px) {
@@ -141,4 +141,11 @@
 		}
 	}
 }
+
+#centeredDiv {
+	display: flex;
+	justify-content: center; /* Horizontal centering */
+	align-items: center; /* Vertical centering */
+	height: 100vh; /* Set the height to fill the entire viewport, adjust as needed */
+  }
 //------- End Bread Crumb --------//

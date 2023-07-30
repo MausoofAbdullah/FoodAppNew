@@ -6,39 +6,42 @@ module.exports = {
 
        
 
-        // const { username } = req.body;
-        // try {
-        //     if (req.session.signUpErr) {
-        //         res.render("user/user-Signup", { user: true, signUpErr: req.session.errMessage });
-        //         req.session.signUpErr = false
-        //     } else {
-        //         res.render('user/user-Signup', { user: true })
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        //     next(error)
-        // }
-              res.render('user/user-signup', )
+    
+        try {
+            if (req.session.signUpErr) {
+                res.render("user/user-Signup", { user: true, signUpErr: req.session.errMessage });
+                req.session.signUpErr = false
+            } else {
+                res.render('user/user-Signup', { user: true })
+            }
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+            //   res.render('user/user-signup',{user:true} )
 
 
 
     },
     postSignup: async (req, res, next) => {
+           const { Email } = req.body;
+
+        const oldUser = await UserModel.findOne({ Email });
+        if(oldUser){
+            req.session.signUpErr = true
+            req.session.errMessage = "Email already exist"
+            res.redirect('/signup')
+        }
         const salt = await bcrypt.genSalt(10);
   const hashedPass = await bcrypt.hash(req.body.Password, salt);
   req.body.Password = hashedPass;
   
-        const newUser = new UserModel(req.body);
-   const { Email } = req.body;
-
-        console.log(newUser,"newUser")
-        try {
-    const oldUser = await UserModel.findOne({ Email });
-            if(oldUser){
-                req.session.signUpErr = true
-                req.session.errMessage = "Email already exist"
-                res.redirect('/signup')
-            }
+  
+  
+  
+  try {
+      
+      const newUser = new UserModel(req.body);
 
                 const user =  newUser.save();
                 res.redirect('/login')
@@ -112,10 +115,25 @@ south: async (req, res, next) => {
     }
 
 },
+productDetail: async (req, res, next) => {
+    try {
+        var userDetails = req.session.user
+        var id = req.params.id
+        
+        
+
+        var proDetails = await productModel.findOne({_id:id})
+        res.render('user/user-singleProduct', { user: true, proDetails, userDetails, })
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+
+},
 
 
 login: async(req,res,next)=>{
-    res.render('user/user-login')
+    res.render('user/user-login',{user:true})
 },
 postLogin:async(req,res,next)=>{
     const { Email, Password } = req.body;
@@ -124,15 +142,10 @@ postLogin:async(req,res,next)=>{
       const user = await UserModel.findOne({ Email: Email });
       if (user) {
         const validity = await bcrypt.compare(Password, user.Password);
-        if(user.Active===false){
-            
-
-            res.redirect('/login')
-          
-        }
+     
   
         // validity?res.status(200).json(user):res.status(400).json("wrong Password")
-        else if (!validity) {
+         if (!validity) {
             res.redirect('/login')
           
         } else {
@@ -173,7 +186,15 @@ Profile: async (req, res, next) => {
 },
 editProfile: async (req, res, next) => {
     try {
-        await userHelpers.updateUserProfile(req.params.id, req.body)
+        let id=req.params.id
+        let userData=req.body
+        await UserModel.updateOne({_id:id},{
+            $set: {
+                Name: userData.Name,
+                Email:userData.Email,
+                Password:userData.Password
+            }
+        })
         res.redirect('/view-profile/' + req.params.id)
     } catch (error) {
         console.log(error);
@@ -220,4 +241,16 @@ postAddress: async (req, res, next) => {
         next(error)
     }
 },
+
+logout: (req, res) => {
+    try {
+        req.session.loggedIn = false
+        req.session.user = null
+        res.redirect('/')
+    } catch (error) {
+        console.log(error);
+        next(error)
+    }
+
+}
 }

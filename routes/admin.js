@@ -15,6 +15,8 @@ const fileStorageEngine = multer.diskStorage({
 
 const upload = multer({ storage: fileStorageEngine })
 /* GET users listing. */
+// router.get('/signup',adminController.signup)
+// router.post('/signup', adminController.postSignup)
 router.get('/login', adminController.adminLogin)
 router.post('/login', adminController.adminPostLogin)
 
@@ -26,13 +28,15 @@ router.get('/', adminController.adminHomePage)
 router.get('/add-product', adminController.adminAddProduct)
 router.post('/add-product', upload.array('Image', 1),  adminController.adminPostProduct)
 router.get('/all-product', adminController.adminGetAllProduct)
-router.get('/product-View-More/:id',  adminController.adminProductViewMore)
+// router.get('/product-View-More/:id',  adminController.adminProductViewMore)
 router.get('/delete-product/:id',  adminController.adminDeleteProduct)
 router.get('/edit-product/:id',  adminController.adminEditProduct)
 router.post('/edit-product/:id', upload.array('Image', 3),  adminController.adminPostEdit)
 
 
 router.get('/user-list', adminController.adminUserList)
+router.get('/make-admin/:id',  adminController.makeAdmin)
+router.get('/undo-admin/:id',  adminController.undoAdmin)
 
 
 /* For Add-Category */

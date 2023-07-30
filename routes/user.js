@@ -15,6 +15,9 @@ router.get('/special', userController.special)
 router.get('/south', userController.south)
 
 
+router.get('/product-details/:id', userController.productDetail)
+
+
 
 router.get('/signup',userController.signup)
 router.post('/signup', userController.postSignup)
@@ -31,5 +34,9 @@ router.post('/add-address/:id',  userController.addAddress)
 router.get('/delete-address/:userId/:addId',  userController.deleteAddress)
 router.post('/get-edit-address',  userController.getEditAddress)
 router.post('/post-edit-address',  userController.postAddress)
+
+
+
+router.get('/logout',userController.logout)
 
 module.exports = router;

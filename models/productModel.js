@@ -14,6 +14,10 @@ const productSchema=mongoose.Schema(
             type:String,
             required:true
         },
+        Quantity:{
+            type:Number,
+            requird:true
+        },
         category:{
             type:String,
             required:true

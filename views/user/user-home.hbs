@@ -20,9 +20,9 @@
 								</div>
 							</div>
 							<div class="col-lg-7">
-								<div class="banner-img">
+								{{!-- <div class="banner-img">
 									<img class="img-fluid" src="user/img/banner/foodimage.jpg" alt="">
-								</div>
+								</div> --}}
 							</div>
 						</div>
 						<!-- single-slide -->
@@ -47,6 +47,14 @@
 		</div>
 	</section>
 	<!-- End banner Area -->
+	<section class="">
+		<div class="col-lg-6 text-center pt-4  " id="centeredDiv" >
+
+		<div class="section-title">
+			<h1 style="color: brown;">Food of your choice ...! </h1>
+		</div>
+		</div>
+	</section>
 
 	<!-- Start category Area -->
 	<section class="category-area">
@@ -57,7 +65,7 @@
 						<div class="col-lg-8 col-md-8">
 							<div class="single-deal">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="/user/img/3274872311985_1may.jpg" alt=""></a>
+								<img class="img-fluid w-100" src="/user/img/banner/veg3.jpg" alt=""></a>
 								<div class="deal-details">
 									<a href="/veg">
 										<h6 class="deal-title">Veg</h6>
@@ -68,7 +76,7 @@
 						<div class="col-lg-4 col-md-4">
 							<div class="single-deal">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="/user/img/1662875704681--cocomo.jpeg" alt="">
+								<img class="img-fluid w-100" src="/user/img/banner/chinese.jpeg" alt="">
 								<a href="user/img/category/c2.jpg" class="img-pop-up" target="_blank">
 									<div class="deal-details">
 									<a href="/chinese">	<h6 class="deal-title">Chinese</h6></a>
@@ -79,7 +87,7 @@
 						<div class="col-lg-4 col-md-4">
 							<div class="single-deal">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="/user/img/9506000149424_1.jpg" alt="">
+								<img class="img-fluid w-100" src="/user/img/banner/special.jpeg" alt="">
 								<a href="user/img/category/c3.jpg" class="img-pop-up" target="_blank">
 									<div class="deal-details">
 									<a href="/special">	<h6 class="deal-title">Special Items</h6></a>
@@ -90,7 +98,7 @@
 						<div class="col-lg-8 col-md-8">
 							<div class="single-deal">
 								<div class="overlay"></div>
-								<img class="img-fluid w-100" src="/user/img/8411061869376_5new_1_.jpg" alt="">
+								<img class="img-fluid w-100" src="/user/img/banner/south Indian.jpg" alt="">
 								<a href="user/img/category/c4.jpg" class="img-pop-up" target="_blank">
 									<div class="deal-details">
 									<a href="/south">	<h6 class="deal-title">South Indian</h6></a>
@@ -113,7 +121,7 @@
 				<div class="row justify-content-center">
 					<div class="col-lg-6 text-center">
 						<div class="section-title">
-							<h1>Latest Collections </h1>
+							<h1>Best Food in your Area</h1>
 							<p>.</p>
 						</div>
 					</div>
@@ -123,7 +131,7 @@
 					{{#each proDetails}}
 					<div class="col-lg-3 col-md-6">
 						<div class="single-product">
-							<img class="img-fluid" src="/admin/product-Images/{{this.Image.[0]}}" alt="">
+							<img class="img-fluid" src="/admin/product-Images/{{this.Image.[0]}}"  alt="">
 							<div class="product-details">
 								<a href="/product-details/{{this._id}}">
 									<h6>{{this.Pname}}</h6>
@@ -131,6 +139,10 @@
 								<div class="price">
 									<h6>Rs.{{this.Price}}</h6>
 									{{!-- <h6 class="l-through">$210.00</h6> --}}
+								</div>
+								<div class="price">
+									<h6>{{this.category}}</h6>
+									
 								</div>
 								<div class="prd-bottom">
 
@@ -217,54 +229,7 @@
 		</div>
 	</section>
 	<!-- end product Area -->
-
-	<!-- start features Area -->
-	<section class="features-area section_gap">
-		<div class="container">
-			<div class="row features-inner">
-				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="single-features">
-						<div class="f-icon">
-							<img src="user/img/features/f-icon1.png" alt="">
-						</div>
-						<h6>Free Delivery</h6>
-						<p>Free Shipping on all order</p>
-					</div>
-				</div>
-				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="single-features">
-						<div class="f-icon">
-							<img src="user/img/features/f-icon2.png" alt="">
-						</div>
-						<h6>Return Policy</h6>
-						<p>Free Shipping on all order</p>
-					</div>
-				</div>
-				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="single-features">
-						<div class="f-icon">
-							<img src="user/img/features/f-icon3.png" alt="">
-						</div>
-						<h6>24/7 Support</h6>
-						<p>Free Shipping on all order</p>
-					</div>
-				</div>
-				<!-- single features -->
-				<div class="col-lg-3 col-md-6 col-sm-6">
-					<div class="single-features">
-						<div class="f-icon">
-							<img src="user/img/features/f-icon4.png" alt="">
-						</div>
-						<h6>Secure Payment</h6>
-						<p>Free Shipping on all order</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+{{!--  --}}
 	<!-- end features Area -->
 
 	
@@ -285,9 +250,7 @@
 					<div class="single-footer-widget">
 						<h6>About Us</h6>
 						<p>
-							perfumes Duty free shop is a perfume retailer with 6 stores all over India, selling all
-							majot designer perfume brands,classic perfumes and celebrity perfumes,with unbeatable
-							experience at wholesale prices
+							Food Zone is an online food app which serves the best nutritious foos
 						</p>
 					</div>
 				</div>

@@ -19,18 +19,17 @@ const UserSchema=mongoose.Schema(
             type:Number,
             required:true
         },
-       
-        
+        isAdmin: {
+            type: Boolean,
+            default:false
+          },
        
         livesin:String,
         worksAt:String,
         relationship:String,
         country:String,
      
-        Active:{
-            type:Boolean,
-            default:true
-        },
+       
      
     },
     {timestamps:true}

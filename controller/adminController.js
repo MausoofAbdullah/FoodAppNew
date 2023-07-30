@@ -1,12 +1,59 @@
 const CategoryModel=require("../models/categoryModel.js")
 const productModel=require('../models/productModel.js')
 const UserModel = require("../models/userModel.js")
+const fs = require('fs')
+const path = require('path');
+const bcrypt=require('bcrypt')
 
-let adminlogin = {
-    username: 'mausoofabdullah@gmail.com',
-    password: "123456"
-}
+
+
 module.exports = {
+    signup: (req, res, next) => {
+
+       
+
+        // const { username } = req.body;
+        // try {
+        //     if (req.session.signUpErr) {
+        //         res.render("user/user-Signup", { user: true, signUpErr: req.session.errMessage });
+        //         req.session.signUpErr = false
+        //     } else {
+        //         res.render('user/user-Signup', { user: true })
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        //     next(error)
+        // }
+              res.render('user/user-signup',{user:true} )
+
+
+
+    },
+    // postSignup: async (req, res, next) => {
+    //     const {Email,Name} = req.body
+    //     const salt = await bcrypt.genSalt(10);
+    // const hashedPass = await bcrypt.hash(req.body.password, salt);
+    // req.body.password = hashedPass;
+  
+    //     const newAdmin = new UserModel({Name,Password:hashedPass,Email,isAdmin:true});
+    //     console.log(newAdmin)
+   
+
+        
+    //     try {
+   
+
+    //             const user =  newAdmin.save();
+    //             res.redirect('/login')
+
+            
+            
+    //     } catch (error) {
+            
+    //     }
+    
+       
+    // },
     adminLogin: (req, res, next) => {
         try {
             if (req.session.admin) {
@@ -21,18 +68,25 @@ module.exports = {
 
     },
     adminPostLogin: async (req, res, next) => {
+    const { Email,Password} = req.body;
+    console.log(Email,Password,"dfdf")
         try {
-            let data = req.body
-            console.log(data,"ffdf")
-            if (data.Username == adminlogin.username) {
-                if (data.Password == adminlogin.password) {
-                    req.session.adminLoggedIn = true
-                    req.session.admin = data
-                    res.redirect('/admin')
-                } else {
+              const admin = await UserModel.findOne({ Email:Email,isAdmin:true });
+              console.log(admin,"whi is admin")
+      if (admin) {
+        const validity = await bcrypt.compare(Password, admin.Password)
+        if (!validity) {
+            res.redirect('/login')
+          
+        }else{
+            req.session.adminLoggedIn = true
+            req.session.admin = admin
+            res.redirect('/admin')
+        }
+                          } else {
                     res.redirect('/admin/login')
                 }
-            } 
+            
         } catch (error) {
             console.log(error);
             next(error)
@@ -40,12 +94,16 @@ module.exports = {
     },
     adminHomePage: async (req, res, next) => {
         try {
-            // let totalRevenue = await adminHelpers.totalReport()
-            // let totalUsers = await adminHelpers.totalUsers()
-            // let ordersTotal = await adminHelpers.orderReport()
-            // let productTotal = await adminHelpers.totalProduct()
-            // var adminDetails = req.session.admin
-            res.render('admin/admin-home', { admin:'true', layout: 'admin-layout' });
+            if(!req.session.admin){
+                res.redirect('/admin/login')
+
+            }
+             let totalUsers = await UserModel.find().count()
+            
+            let productTotal = await productModel.find().count()
+            var adminDetails = req.session.admin
+            
+            res.render('admin/admin-home', { admin:'true', layout: 'admin-layout',totalUsers,productTotal,adminDetails });
         } catch (error) {
             console.log(error)
             next(error)
@@ -93,10 +151,14 @@ module.exports = {
             next(error)
         }
     },
-    adminDeleteProduct: (req, res, next) => {
+    adminDeleteProduct:async (req, res, next) => {
         try {
             let proId = req.params.id
-            var imgDel = productHelpers.deleteProduct(proId)
+            const product=await productModel.findOne({_id:proId})
+            console.log(product,"dfdfd")
+            var imgDel =product.Image
+          const delet=  await productModel.deleteOne({_id:proId})
+          console.log(delet,"what")
             console.log(imgDel);
             if (imgDel) {
                 for (i = 0; i < imgDel.length; i++) {
@@ -115,14 +177,16 @@ module.exports = {
     },
     adminEditProduct: async (req, res, next) => {
         try {
-            let proDetails = await productHelpers.productDetails(req.params.id)
-            var catDetails = await adminHelpers.viewCategory()
+            let proId = req.params.id
+            
+            let proDetails = await productModel.findOne({_id:proId})
+            var catDetails = await CategoryModel.find().exec()
             for (let i = 0; i < catDetails.length; i++) {
                 if (proDetails.Category == catDetails[i].CategoryName) {
                     catDetails[i].flag = true
                 }
             }
-            res.render('admin/admin-Edit-product', { proDetails, catDetails, layout: 'admin-layout' })
+            res.render('admin/admin-edit-product', { proDetails, catDetails, layout: 'admin-layout' })
         } catch (error) {
             console.log(error);
             next(error)
@@ -132,12 +196,19 @@ module.exports = {
     adminPostEdit: async (req, res, next) => {
         try {
             let id = req.params.id
+            let oldImage=null
+            proDetails=req.body
             const editImg = []
             for (i = 0; i < req.files.length; i++) {
                 editImg[i] = req.files[i].filename
             }
             req.body.Image = editImg
-            var oldImage = await productHelpers.productUpdate(id, req.body)
+            const product = await productModel.findOne({_id:id})
+            if (proDetails.Image.length == 0) {
+                proDetails.Image = product.Image
+            } else {
+                oldImage = product.Image
+            }
             if (oldImage) {
                 for (i = 0; i < oldImage.length; i++) {
                     var oldImagePath = path.join(__dirname, '../public/admin/product-Images/' + oldImage[i])
@@ -147,27 +218,58 @@ module.exports = {
                     })
                 }
             }
+            await productModel.updateOne({_id:id},{
+                $set: {
+                    Pname: proDetails.Pname,
+                    Price: proDetails.Price,
+                    Description: proDetails.Description,
+                    Quantity: proDetails.Quantity,
+                    category: proDetails.Category,
+                    Image: proDetails.Image
+                }
+            })
             res.redirect('/admin/all-product')
         } catch (error) {
             console.log(error);
             next(error)
         }
     },
-    adminProductViewMore: async (req, res, next) => {
+  
+    adminUserList: async (req, res, next) => {
         try {
-            id = req.params.id
-            proDetails = await productHelpers.productDetails(id)
-            catDetails = await adminHelpers.viewCategory()
-            res.render('admin/admin-ViewMore-product', { proDetails, catDetails })
+            var showUser = await UserModel.find().exec()
+            res.render('admin/admin-userlist', { layout: 'admin-layout', admin: true, showUser })
         } catch (error) {
             console.log(error);
             next(error)
         }
     },
-    adminUserList: async (req, res, next) => {
+    makeAdmin: async (req, res, next) => {
         try {
-            var showUser = await UserModel.find().exec()
-            res.render('admin/admin-userlist', { layout: 'admin-layout', admin: true, showUser })
+            var userID = req.params.id
+            await UserModel.updateOne({_id:userID},
+                {
+                  $set:{
+                    isAdmin:true
+                  }
+                })
+            res.redirect('/admin/user-list')
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+
+    },
+    undoAdmin: async(req, res, next) => {
+        try {
+            var userID = req.params.id
+            await UserModel.updateOne({_id:userID},
+                {
+                  $set:{
+                    isAdmin:false
+                  }
+                })
+            res.redirect('/admin/user-list')
         } catch (error) {
             console.log(error);
             next(error)
