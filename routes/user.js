@@ -2,6 +2,16 @@ var express = require("express");
 var router = express.Router();
 const userController = require("../controller/userController");
 
+const verifyUser = (async (req, res, next) => {
+    if (req.session.user) {
+      
+        next()
+    
+    } else {
+      res.redirect('/login')
+    }
+  })
+
 /* GET home page. */
 // router.get('/', function(req, res, next) {
 //   res.render('user/user', { title: 'new user' });

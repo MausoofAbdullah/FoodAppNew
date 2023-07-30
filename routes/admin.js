@@ -14,6 +14,14 @@ const fileStorageEngine = multer.diskStorage({
 });
 
 const upload = multer({ storage: fileStorageEngine });
+/* For Admin Session  */
+const verifyAdmin = ((req, res, next) => {
+  if (req.session.admin) {
+    next()
+  } else {
+    res.redirect('/admin/login')
+  }
+})
 
 // for signup
 // router.get('/signup',adminController.signup)
@@ -21,10 +29,10 @@ const upload = multer({ storage: fileStorageEngine });
 router.get("/login", adminController.adminLogin);
 router.post("/login", adminController.adminPostLogin);
 
-router.get("/", adminController.adminHomePage);
+router.get("/",verifyAdmin , adminController.adminHomePage);
 
 /* For Product */
-router.get("/add-product", adminController.adminAddProduct);
+router.get("/add-product",verifyAdmin , adminController.adminAddProduct);
 router.post(
   "/add-product",
   upload.array("Image", 1),
@@ -41,13 +49,13 @@ router.post(
 );
 
 /* GET users listing. */
-router.get("/user-list", adminController.adminUserList);
-router.get("/make-admin/:id", adminController.makeAdmin);
-router.get("/undo-admin/:id", adminController.undoAdmin);
+router.get("/user-list", verifyAdmin ,adminController.adminUserList);
+router.get("/make-admin/:id",verifyAdmin , adminController.makeAdmin);
+router.get("/undo-admin/:id",verifyAdmin , adminController.undoAdmin);
 
 /* For Add-Category */
-router.get("/category", adminController.adminCategory);
-router.post("/category", adminController.adminPostCategory);
+router.get("/category",verifyAdmin , adminController.adminCategory);
+router.post("/category",verifyAdmin , adminController.adminPostCategory);
 
 // for logout
 router.get("/logout", adminController.logout);
