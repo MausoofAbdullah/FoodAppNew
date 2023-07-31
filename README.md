@@ -7,7 +7,7 @@ Admin can login through the previously registered credentials, can add products 
 
 Admin can make a user into Admin
 
-The username for admin is "mausoofabdullah@gmaoil.com" password is "123456"
+The username for admin is "mausoofabdullah@gmail.com" password is "123456"
 
 User can signup and login with the credentials matching with signup credentials,view home page,view products category wise, view sigle product details.
 
