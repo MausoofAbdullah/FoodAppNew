@@ -33,11 +33,11 @@
                                         <td>
                                             {{#if this.isAdmin}}
                                             <a href="/admin/undo-admin/{{this._id}}" class="btn btn-danger"
-                                                onclick="return confirm('Do you want to block {{this.Name}}')">Undo Admin</a>
+                                                onclick="return confirm('Do you want to undo Admin {{this.Name}}')">Undo Admin</a>
                                             {{else}}
 
                                             <a href="/admin/make-admin/{{this._id}}" class="btn btn-warning"
-                                                onclick="return confirm('Do you want to Unblock {{this.Name}}')">Make Admin</a>
+                                                onclick="return confirm('Do you want to make User to Admin {{this.Name}}')">Make Admin</a>
                                             {{/if}}
                                         </td>
 
@@ -50,15 +50,3 @@
                 </div>
 </body>
 
-{{!-- Fn for dataTable --}}
-<!-- <script>
-
-      $(document).ready(function () {
-        $('#userTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
-        });
-    });
-</script> -->
